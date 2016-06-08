@@ -3,6 +3,7 @@ import Filter from './filter.jsx';
 import Listings from './listings.jsx';
 import ListingInfo from './listingInfo.jsx';
 import NewListing from './newListing.jsx';
+import Comments from './comments.jsx';
 import helpers from '../lib/helpers.js';
 import { Grid, Row, Col, ButtonToolbar } from 'react-bootstrap';
 
@@ -162,7 +163,9 @@ class App extends React.Component {
         <Nav handleNavClick={this.handleNavClick.bind(this)}/>
         <Grid>
           {viewLogic}
+         
         </Grid>
+         <Comments />
       </div>
     );
   }

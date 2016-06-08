@@ -106,6 +106,20 @@ app.get('/api/logout', function(req, res) {
 
 });
 
+app.get('/api/addComment/:listingId/:commentId', function(req, res) {
+  //listingId required
+
+  //check if private checkbox checked.
+});
+app.get('/api/deleteComment/:listingId/:commentId', function(req, res) {
+  //check if owner of comment or listing.
+
+});
+app.get('/api/getComments/:listingId', function(req, res) {
+  //get json array of comments.
+});
+
+
 // Start server, listen for client requests on designated port
 console.log( 'hackifieds server listening on 3000....' );
 app.listen(3000);
