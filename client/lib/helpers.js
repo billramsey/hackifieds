@@ -14,7 +14,7 @@ let getListings = (category, callback) => {
     url: '/api/listings',
     method: 'GET',
     contentType: 'application/json',
-    data: {category: category},
+    data: {category},
     success: data => callback(data),
     error: err => console.log( 'Error getting listings from server.', err)
   });

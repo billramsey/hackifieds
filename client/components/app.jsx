@@ -1,15 +1,13 @@
-import Nav from './nav.jsx';
+import Navigation from './navigation.jsx';
 import Filter from './filter.jsx';
 import Listings from './listings.jsx';
 import ListingInfo from './listingInfo.jsx';
 import NewListing from './newListing.jsx';
 import Comments from './comments.jsx';
 import helpers from '../lib/helpers.js';
-import { Grid, Row, Col, ButtonToolbar } from 'react-bootstrap';
-
+import { PageHeader, Grid, Row, Col, ButtonToolbar, ButtonGroup, Button, Jumbotron } from 'react-bootstrap';
 
 class App extends React.Component {
-
   constructor (props) {
     super(props);
 
@@ -110,34 +108,45 @@ class App extends React.Component {
     let viewLogic;
     let loginLogic;
     let newListingLogic;
+    let profile;
+    let welcomeMsg;
+    let tempHousePic = "../assets/tempHouse.png";
+    let tempProfilePic = "../assets/tempProfile.png";
 
     if ( this.state.currentView === 'listingsView' ) {
       viewLogic =
-        <Row className="show-grid">
-          <Col xs={1} md={1} lg={1}></Col>
-          <Col xs={2} md={2} lg={2}>
-            <Filter handleFilterItemClick={this.handleFilterItemClick.bind(this)}
-                    listings={this.state.listings}/>
+        <Row>
+          <Col md={2}>
+            <Navigation handleNavClick={this.handleNavClick.bind(this)}/>
           </Col>
-          <Col xs={9} md={9} lg={9}>
-            <Listings handleListingEntryClick={this.handleListingEntryClick.bind(this)}
-                      handleListingInfoClick={this.handleListingInfoClick.bind(this)}
-                      activeFilter={this.state.activeFilter}
-                      activeListing={this.state.activeListing}
-                      listings={this.state.listings}
-                      user={this.state.currentUser}/>
+          <Col md={8}>
+            <Listings 
+              handleListingEntryClick={this.handleListingEntryClick.bind(this)}
+              handleListingInfoClick={this.handleListingInfoClick.bind(this)}
+              activeFilter={this.state.activeFilter}
+              activeListing={this.state.activeListing}
+              listings={this.state.listings}
+              user={this.state.currentUser}
+              profilePic={tempProfilePic}
+              housePic={tempHousePic}/>
+          </Col>
+          <Col md={2}>
+            <Filter 
+              handleFilterItemClick={this.handleFilterItemClick.bind(this)}
+              listings={this.state.listings}/>
           </Col>
         </Row>;
-    } else if ( (Object.keys(this.state.currentUser).length !== 0)
-               && (this.state.currentView === 'newListingView') ) {
+    } else if ( (Object.keys(this.state.currentUser).length !== 0) && 
+                (this.state.currentView === 'newListingView') ) {
       viewLogic =
-        <Row className="show-grid">
-          <Col xs={12} md={12} lg={12}>
-            <NewListing categories={this.state.categories}
-                        navCategory={this.state.navCategory}
-                        user={this.state.currentUser}
-                        clickHandler={this.sendListing.bind(this)}
-                        handleNewListingClose={this.handleNewListingClose.bind(this)}/>
+        <Row>
+          <Col>
+            <NewListing
+              categories={this.state.categories}
+              navCategory={this.state.navCategory}
+              user={this.state.currentUser}
+              clickHandler={this.sendListing.bind(this)}
+              handleNewListingClose={this.handleNewListingClose.bind(this)}/>
           </Col>
         </Row>;
     }
@@ -146,7 +155,7 @@ class App extends React.Component {
       loginLogic =
         <a className="btn top-btn" href="/auth/github">Login with GitHub</a>;
       newListingLogic =
-        <a className="btn top-btn"href="/auth/github" onClick={this.handleNewListingClick.bind(this)}>Post A Listing</a>;
+        <a className="btn top-btn" href="/auth/github" onClick={this.handleNewListingClick.bind(this)}>Post a Listing</a>;
     } else {
       loginLogic =
         <a className="btn top-btn" href="/" onClick={this.logOut.bind(this)}>Logout</a>;
@@ -154,29 +163,23 @@ class App extends React.Component {
         <a className="btn top-btn"href="javascript:void(0);" onClick={this.handleNewListingClick.bind(this)}>Post A Listing</a>;
     }
 
-    let profile;
     if (Object.keys(this.state.currentUser).length !== 0) {
-      profile = 
-      <div>
-        <img src={this.state.currentUser.profilePic} alt="Profile Pic" height="42" width="42" />
-        <div>{this.state.currentUser.firstName} {this.state.currentUser.lastName}</div>
-      </div>;
+      welcomeMsg = <span>Welcome {this.state.currentUser.firstName}!</span>;
     }
-
+    
     return (
-      <div className="app">
-        {profile}
-        <ButtonToolbar>
-          {newListingLogic}
-          {loginLogic}
-        </ButtonToolbar>
-        <Nav handleNavClick={this.handleNavClick.bind(this)}/>
-        <Grid>
-          {viewLogic}
-         
-        </Grid>
-         <Comments />
-      </div>
+      <Grid>
+        <PageHeader>
+          <span>+ </span>
+          <small>{welcomeMsg}</small>
+          <ButtonToolbar className="pull-right">
+            <Button bsSize="xsmall">{newListingLogic}</Button>
+            <Button bsSize="xsmall">{loginLogic}</Button>
+          </ButtonToolbar>
+        </PageHeader>
+        <Grid>{viewLogic}</Grid>
+        <Comments />
+      </Grid>
     );
   }
 

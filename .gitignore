@@ -15,6 +15,7 @@ client/dist/
 npm-debug.log
 github_oauth.js
 uploads/
+db/dbPassword.js
 
 # Floobits
 .floo
