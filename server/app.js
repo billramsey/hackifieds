@@ -51,7 +51,6 @@ passport.use(new GitHubStrategy({
 },
 function(accessToken, refreshToken, profile, done) {
   console.log('profile: ', profile);
-  console.log('profile.username: ', profile.username);
   orgs = 'https://api.github.com/users/' + profile.username + '/orgs';
   var options = {
     url: orgs,
@@ -70,18 +69,25 @@ function(accessToken, refreshToken, profile, done) {
           if (org.login === 'hackreactor') {
             authorized = true;
             console.log('found hackreactor as org, authenticating the user');
-            db.User.findOrCreate({ where: { username: profile.username } })
+            db.User.findOrCreate({ 
+              where: { 
+                username: profile.username,
+                firstName: profile.displayName.split(' ')[0],
+                lastName: profile.displayName.split(' ')[profile.displayName.split(' ').length - 1],
+                email: profile.emails[0].value,
+                profilePic: profile._json.avatar_url,
+              } 
+            })
             .spread(function(user, created) {
-              console.log('Created: ', created);
               return done(null, user);
             });
           }
         });
         if (!authorized) {
-          return done('Sorry, you are not part of the Hack Reactor community. If you are, please make your Hack Reactor organization visibility public on github');
+          return done('Sorry, you are not part of the Hack Reactor community. If you are, please make your Hack Reactor organization visibility public on github. Please refer to https://help.github.com/articles/publicizing-or-hiding-organization-membership/');
         } 
       } else {
-        return done('Sorry, you are not part of the Hack Reactor community. If you are, please make your Hack Reactor organization visibility public on github');
+        return done('Sorry, you are not part of the Hack Reactor community. If you are, please make your Hack Reactor organization visibility public on github. Please refer to https://help.github.com/articles/publicizing-or-hiding-organization-membership/');
       }
     }
   });

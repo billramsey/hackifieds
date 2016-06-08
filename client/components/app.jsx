@@ -154,8 +154,18 @@ class App extends React.Component {
         <a className="btn top-btn"href="javascript:void(0);" onClick={this.handleNewListingClick.bind(this)}>Post A Listing</a>;
     }
 
+    let profile;
+    if (Object.keys(this.state.currentUser).length !== 0) {
+      profile = 
+      <div>
+        <img src={this.state.currentUser.profilePic} alt="Profile Pic" height="42" width="42" />
+        <div>{this.state.currentUser.firstName} {this.state.currentUser.lastName}</div>
+      </div>;
+    }
+
     return (
       <div className="app">
+        {profile}
         <ButtonToolbar>
           {newListingLogic}
           {loginLogic}
