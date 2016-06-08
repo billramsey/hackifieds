@@ -12,6 +12,7 @@ var request = require('request');
 var db = require('../db/db');
 var listingsCtrl = require('./controllers/listingsController');
 var categoriesController = require('./controllers/categoriesController');
+var commentsController = require('./controllers/commentsController');
 var github = require('./auth/github_oauth');
 var upload = multer({dest: 'uploads/'});
 
@@ -135,19 +136,10 @@ app.get('/api/logout', function(req, res) {
   });
 
 });
-
-app.get('/api/addComment/:listingId/:commentId', function(req, res) {
-  //listingId required
-
-  //check if private checkbox checked.
-});
-app.get('/api/deleteComment/:listingId/:commentId', function(req, res) {
-  //check if owner of comment or listing.
-
-});
-app.get('/api/getComments/:listingId', function(req, res) {
-  //get json array of comments.
-});
+console.log('comments', commentsController);
+app.post('/api/addComment/:listingId/:commentId?', commentsController.postComment); 
+app.post('/api/deleteComment/:listingId/:commentId', commentsController.deleteComment);
+app.get('/api/getComments/:listingId', commentsController.getComments);
 
 
 // Start server, listen for client requests on designated port
