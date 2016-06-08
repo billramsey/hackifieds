@@ -52,6 +52,7 @@ var Image = db.define('Image', {
 // Image model
 var Comment = db.define('Image', {
   commentId: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+  private: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false},
   text: { type: Sequelize.STRING(255), allowNull: true },
   parentId: { type: Sequelize.INTEGER },
 });
@@ -66,6 +67,7 @@ Listing.hasMany(Image, { foreignKey: { name: 'listingId', allowNull: false } });
 Listing.hasMany(Comment, { foreignKey: { name: 'listingId', allowNull: false } });
 Image.belongsTo(Listing, { foreignKey: { name: 'listingId', allowNull: false } });
 Comment.belongsTo(Listing, { foreignKey: { name: 'listingId', allowNull: false } });
+Comment.belongsTo(User, { foreignKey: { name: 'userId', allowNull: false } });
 
 // Sync database
 User.sync()
