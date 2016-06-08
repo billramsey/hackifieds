@@ -30,6 +30,7 @@
     "react-bootstrap": "^0.29.4",
     "react-dom": "^15.1.0",
     "react-router": "^2.4.1",
+    "request": "^2.72.0",
     "require": "^2.4.20",
     "sequelize": "^3.23.3",
     "underscore": "^1.8.3"

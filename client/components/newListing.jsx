@@ -24,6 +24,8 @@ class NewListing extends React.Component {
       });
       this.newListing.categoryId = currentCat[0].categoryId;
     }
+    // Problem if you never set price.
+    this.newListing.price = (this.newListing.price === undefined) ? 0 : this.newListing.price; 
     this.newListing.userId = this.props.user.userId;
     this.props.clickHandler(this.newListing, this.images);
   }

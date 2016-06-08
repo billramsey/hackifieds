@@ -6,6 +6,7 @@ var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var GitHubStrategy = require('passport-github2').Strategy;
 var multer = require('multer');
+var request = require('request');
 
 // custom dependencies
 var db = require('../db/db');
@@ -39,6 +40,8 @@ app.use ('/scripts', express.static(__dirname + '/../node_modules/react-dom/dist
 app.use ('/scripts', express.static(__dirname + '/../node_modules/underscore/'));
 app.use ('/uploads', express.static(__dirname + '/../uploads/'));
 
+
+var orgs;
 // configure passport github oAuth strategy
 passport.use(new GitHubStrategy({
   clientID: github.GITHUB_CLIENT_ID,
@@ -48,12 +51,39 @@ passport.use(new GitHubStrategy({
 function(accessToken, refreshToken, profile, done) {
   console.log('profile: ', profile);
   console.log('profile.username: ', profile.username);
-  // TODO: include fields that are not nullable in DB
-  db.User.findOrCreate({ where: { username: profile.username } })
-    .spread(function(user, created) {
-      console.log('Created: ', created);
-      return done(null, user);
-    });
+  orgs = 'https://api.github.com/users/' + profile.username + '/orgs';
+  var options = {
+    url: orgs,
+    headers: {
+      'User-Agent': profile.username,
+    },
+  };
+   
+  request(options, function (err, data) {
+    var authorized = false;
+    if (err) {
+      return console.log(err);
+    } else {
+      if (data.body && JSON.parse(data.body).length > 0) {
+        JSON.parse(data.body).forEach(function(org) {
+          if (org.login === 'hackreactor') {
+            authorized = true;
+            console.log('found hackreactor as org, authenticating the user');
+            db.User.findOrCreate({ where: { username: profile.username } })
+            .spread(function(user, created) {
+              console.log('Created: ', created);
+              return done(null, user);
+            });
+          }
+        });
+        if (!authorized) {
+          return done('Sorry, you are not part of the Hack Reactor community. If you are, please make your Hack Reactor organization visibility public on github');
+        } 
+      } else {
+        return done('Sorry, you are not part of the Hack Reactor community. If you are, please make your Hack Reactor organization visibility public on github');
+      }
+    }
+  });
 }));
 
 app.use(session({
@@ -65,7 +95,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/auth/github',
-  passport.authenticate('github', { scope: [ 'user:email' ] }));
+  passport.authenticate('github', { scope: [ 'user', 'read:org' ] }));
 
 app.get('/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/login' }),
@@ -94,7 +124,7 @@ app.route('/api/categories')
   });
 app.route('/api/auth')
   .get(function(req, res) {
-    console.log('Req session before', req.session);
+    console.log(orgs, 'Req session before', req.session);
     res.send(req.user);
   });
 
