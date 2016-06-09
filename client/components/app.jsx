@@ -139,16 +139,13 @@ class App extends React.Component {
     } else if ( (Object.keys(this.state.currentUser).length !== 0) && 
                 (this.state.currentView === 'newListingView') ) {
       viewLogic =
-        <Row>
-          <Col>
             <NewListing
               categories={this.state.categories}
               navCategory={this.state.navCategory}
               user={this.state.currentUser}
               clickHandler={this.sendListing.bind(this)}
               handleNewListingClose={this.handleNewListingClose.bind(this)}/>
-          </Col>
-        </Row>;
+
     }
 
     if (Object.keys(this.state.currentUser).length === 0) {

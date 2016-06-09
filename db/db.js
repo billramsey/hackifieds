@@ -44,7 +44,7 @@ var Listing = db.define('Listing', {
   startDate: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
   endDate: { type: Sequelize.DATE },
   roomtype: { type: Sequelize.STRING(100) },
-  distance: { type: Sequelize.FLOAT },
+  distance: { type: Sequelize.FLOAT }
 });
 
 // Image model
@@ -54,11 +54,10 @@ var Image = db.define('Image', {
 });
 
 // Image model
-var Comment = db.define('Image', {
+var Comment = db.define('Comment', {
   commentId: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
   private: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false},
   text: { type: Sequelize.STRING(255), allowNull: true },
-  parentId: { type: Sequelize.INTEGER },
 });
 
 
@@ -72,6 +71,7 @@ Listing.hasMany(Comment, { foreignKey: { name: 'listingId', allowNull: false } }
 Image.belongsTo(Listing, { foreignKey: { name: 'listingId', allowNull: false } });
 Comment.belongsTo(Listing, { foreignKey: { name: 'listingId', allowNull: false } });
 Comment.belongsTo(User, { foreignKey: { name: 'userId', allowNull: false } });
+Comment.hasOne(Comment, { as: 'Parent', foreignKey: { name: 'parentId', allowNull: true } });
 
 // Sync database
 User.sync()
