@@ -64,6 +64,7 @@ function(accessToken, refreshToken, profile, done) {
     if (err) {
       return console.log(err);
     } else {
+      console.log(data)
       if (data.body && JSON.parse(data.body).length > 0) {
         JSON.parse(data.body).forEach(function(org) {
           if (org.login === 'hackreactor') {
@@ -87,7 +88,7 @@ function(accessToken, refreshToken, profile, done) {
           return done('Sorry, you are not part of the Hack Reactor community. If you are, please make your Hack Reactor organization visibility public on github. Please refer to https://help.github.com/articles/publicizing-or-hiding-organization-membership/');
         } 
       } else {
-        return done('Sorry, you are not part of the Hack Reactor community. If you are, please make your Hack Reactor organization visibility public on github. Please refer to https://help.github.com/articles/publicizing-or-hiding-organization-membership/');
+        return done('You do not have any public organizations.');
       }
     }
   });

@@ -44,7 +44,8 @@ var Listing = db.define('Listing', {
   startDate: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
   endDate: { type: Sequelize.DATE },
   roomtype: { type: Sequelize.STRING(100) },
-  distance: { type: Sequelize.FLOAT }
+  distance: { type: Sequelize.STRING(100) },
+  duration: { type: Sequelize.STRING(100) }
 });
 
 // Image model
