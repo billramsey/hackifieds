@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import helpers from '../lib/helpers.js';
 
 class Parent extends React.Component {

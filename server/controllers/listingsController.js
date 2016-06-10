@@ -56,4 +56,14 @@ exports.addOne = function(listing, images, callback) {
       callback(404, error);
     });
 };
-
+//Controller method - get detailed entry view
+exports.getOne = function(id, callback) {
+  db.Listing.findOne({where: {listingId: id}})
+    .then(function(listing) {
+      callback(201, listing.dataValues);
+    })
+    .catch(function(error) {
+      console.error(error);
+      callback(404, error);
+    });
+};

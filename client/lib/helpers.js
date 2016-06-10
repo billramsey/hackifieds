@@ -19,6 +19,18 @@ let getListings = (category, callback) => {
     error: err => console.log( 'Error getting listings from server.', err)
   });
 };
+
+//Helper functions performing AJAX requests
+let getDetailedListing = (id, callback) => {
+  $.ajax({
+    url: '/api/entryDetail',
+    method: 'GET',
+    contentType: 'application/json',
+    data: {id},
+    success: data => callback(data),
+    error: err => console.log( 'Error getting listings from server.', err)
+  });
+};
   
 let postListing = (formData, callback) => {
   $.ajax({
@@ -74,5 +86,5 @@ let dateFormatter = date => {
   return months[month] + ' ' + day;
 };
 
-export default { getCategories, getListings, postListing, userAuth, dateFormatter, logout};
+export default { getCategories, getListings, postListing, userAuth, dateFormatter, logout, getDetailedListing};
 

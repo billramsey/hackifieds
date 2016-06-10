@@ -135,6 +135,16 @@ app.route('/api/auth')
     res.send(req.user);
   });
 
+
+app.route('/api/entryDetail')
+  .get(function(req, res) {
+    
+    listingsCtrl.getOne(req.query.id, function(statusCode, results) {
+      console.log('results:', results);
+      res.status(statusCode).send(results);
+    });
+  });
+
 app.get('/api/logout', function(req, res) {
   req.session.destroy(function() {
     console.log( req.session);
